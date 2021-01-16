@@ -1,10 +1,20 @@
 const assert = require("assert");
+const worker = require("./worker");
 
-describe("Simple Math Test", () => {
+describe("Earliest Start Test", () => {
   it("should return 2", () => {
     assert.strictEqual(1 + 1, 2);
   });
-  it("should return 9", () => {
-    assert.strictEqual(3 * 3, 9);
+});
+
+describe("Latest End Test", () => {
+  it("should return 2", () => {
+    assert.strictEqual(1 + 1, 2);
+  });
+});
+
+describe("Two Or More Free Test", () => {
+  it("should return 2", () => {
+    assert.strictEqual(1 + 1, 2);
   });
 });
