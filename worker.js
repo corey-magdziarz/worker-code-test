@@ -5,7 +5,14 @@ const moment = require("moment");
 var allData = [];
 var dateMap = {};
 
-module.exports = function readFileLineByLine(filePath = "./test.txt") {
+// Function that reads a file line by line and splits the lines into easy to use data
+// Puts all the data into and in the form of id, start date, end date
+// On end of file calls three main function that are responsible for the following:
+//      Outputting the earliest start time
+//      Outputting the latest end time
+//      Outputting all time intervals where 2 or more workers are free
+
+exports.readFileLineByLine = function readFileLineByLine(filePath = "./test.txt") {
   const readInterface = readline.createInterface({
     input: fs.createReadStream(filePath),
     console: false,
@@ -53,6 +60,8 @@ function getTwoOrMoreWorkersFree(arrayOfSortedDates) {
   printIntervals();
 }
 
+// Function takes in the time period that a worker its quarter hour intervals to the object dateMap
+
 function twoDatesMapped(currentStartDate, currentEndDate) {
   for (var currentIndex = currentStartDate; currentIndex < moment(currentEndDate).add(15, "m").toDate(); currentIndex = moment(currentIndex).add(15, "m").toDate()) {
     if (currentIndex in dateMap) {
@@ -62,6 +71,10 @@ function twoDatesMapped(currentStartDate, currentEndDate) {
     }
   }
 }
+
+// Function that deals with output for question 3
+// Iterates over map first date and time where the value is greater then 1, date and time is start interval
+// Then locates the second date and time where the value is 1, end interval is date and time of the key before this one
 
 function printIntervals() {
   console.log("(Question 3) Intervals of date and times (in UTC) where there are at least 2 workers free:");
@@ -73,12 +86,15 @@ function printIntervals() {
       startInterval = key;
     }
     if (value < 2 && startInterval != undefined) {
-      console.log("\t" + startInterval + " / " + endInterval);
+      console.log("\t" + new Date(startInterval).toISOString() + " / " + new Date(endInterval).toISOString());
       startInterval = undefined;
     }
     endInterval = key;
   }
+
+  // Final if statement to handle end of object
+
   if (startInterval != undefined) {
-    console.log("\t" + startInterval + " / " + endInterval);
+    console.log("\t" + new Date(startInterval).toISOString() + " / " + new Date(endInterval).toISOString());
   }
 }

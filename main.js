@@ -1,2 +1,2 @@
-const worker = require("./worker");
-worker();
+const { readFileLineByLine } = require("./worker");
+readFileLineByLine("./input.txt");
