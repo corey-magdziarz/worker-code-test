@@ -12,7 +12,7 @@ var dateMap = {};
 //      Outputting the latest end time
 //      Outputting all time intervals where 2 or more workers are free
 
-exports.readFileLineByLine = function readFileLineByLine(filePath = "./test.txt") {
+function readFileLineByLine(filePath = "./test.txt") {
   const readInterface = readline.createInterface({
     input: fs.createReadStream(filePath),
     console: false,
@@ -34,21 +34,25 @@ exports.readFileLineByLine = function readFileLineByLine(filePath = "./test.txt"
         .slice()
         .sort((a, b) => b.startDate - a.startDate)
         .reverse();
-      getEarliestFree(sortedByStartDate);
+      var earliestFree = getEarliestFree(sortedByStartDate);
+
+      console.log("(Question 1) Starting date and time (in UTC) of the earliest interval where any of the workers are free: \n\t" + earliestFree + "\n");
 
       const sortedByeEndDate = allData.slice().sort((a, b) => b.endDate - a.endDate);
-      getLatestFree(sortedByeEndDate);
+      var latestFree = getLatestFree(sortedByeEndDate);
+
+      console.log("(Question 2) Ending date and time (in UTC) of the latest interval where any of the workers are free: \n\t" + latestFree + "\n");
 
       getTwoOrMoreWorkersFree(sortedByStartDate);
     });
-};
+}
 
 function getEarliestFree(arrayOfDates) {
-  console.log("(Question 1) Starting date and time (in UTC) of the earliest interval where any of the workers are free: \n\t" + arrayOfDates[0].startDate.toISOString() + "\n");
+  return arrayOfDates[0].startDate.toISOString();
 }
 
 function getLatestFree(arrayOfDates) {
-  console.log("(Question 2) Ending date and time (in UTC) of the latest interval where any of the workers are free: \n\t" + arrayOfDates[0].endDate.toISOString() + "\n");
+  return arrayOfDates[0].endDate.toISOString();
 }
 
 function getTwoOrMoreWorkersFree(arrayOfSortedDates) {
@@ -98,3 +102,7 @@ function printIntervals() {
     console.log("\t" + new Date(startInterval).toISOString() + " / " + new Date(endInterval).toISOString());
   }
 }
+
+exports.readFileLineByLine = readFileLineByLine;
+exports.getEarliestFree = getEarliestFree;
+exports.getLatestFree = getLatestFree;

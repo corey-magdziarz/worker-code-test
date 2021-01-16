@@ -1,20 +1,19 @@
 const assert = require("assert");
-const worker = require("./worker");
+const { getEarliestFree, getLatestFree } = require("../worker");
+
+const testData = [
+  { id: "0", startDate: new Date("2020-01-01T00:15:00.000Z"), endDate: new Date("2020-01-01T08:15:00.000Z") },
+  { id: "1", startDate: new Date("2020-01-01T00:35:00.000Z"), endDate: new Date("2020-01-01T09:15:00.000Z") },
+];
 
 describe("Earliest Start Test", () => {
-  it("should return 2", () => {
-    assert.strictEqual(1 + 1, 2);
+  it("Should return earliest start time", () => {
+    assert.strictEqual(getEarliestFree(testData), "2020-01-01T00:15:00.000Z");
   });
 });
 
 describe("Latest End Test", () => {
-  it("should return 2", () => {
-    assert.strictEqual(1 + 1, 2);
-  });
-});
-
-describe("Two Or More Free Test", () => {
-  it("should return 2", () => {
-    assert.strictEqual(1 + 1, 2);
+  it("Should return latest end time", () => {
+    assert.strictEqual(getLatestFree(testData.slice().sort((a, b) => b.endDate - a.endDate)), "2020-01-01T09:15:00.000Z");
   });
 });
