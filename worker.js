@@ -3,7 +3,6 @@ const readline = require("readline");
 const moment = require("moment");
 
 var allData = [];
-var dateMap = {};
 
 // Function that reads a file line by line and splits the lines into easy to use data
 // Puts all the data into and in the form of id, start date, end date
@@ -48,25 +47,29 @@ function readFileLineByLine(filePath = "./test.txt") {
 }
 
 function getEarliestFree(arrayOfDates) {
-  return arrayOfDates[0].startDate.toISOString();
+  return arrayOfDates.length > 0 ? arrayOfDates[0].startDate.toISOString() : "None";
 }
 
 function getLatestFree(arrayOfDates) {
-  return arrayOfDates[0].endDate.toISOString();
+  return arrayOfDates.length > 0 ? arrayOfDates[0].endDate.toISOString() : "None";
 }
 
 function getTwoOrMoreWorkersFree(arrayOfSortedDates) {
+  var dateMap = {};
+
   for (var currentDateIndex = 0; currentDateIndex < arrayOfSortedDates.length; currentDateIndex++) {
     var currentStartDate = arrayOfSortedDates[currentDateIndex].startDate;
     var currentEndDate = arrayOfSortedDates[currentDateIndex].endDate;
-    twoDatesMapped(currentStartDate, currentEndDate);
+    dateMap = twoDatesMapped(currentStartDate, currentEndDate, dateMap);
   }
-  printIntervals();
+  printIntervals(dateMap);
 }
 
-// Function takes in the time period that a worker its quarter hour intervals to the object dateMap
+// Function takes in the start and end date that a worker is free and
+// breaks it into quarter hour intervals and adds them to the object dateMap
+// Values represent how often the interval comes up
 
-function twoDatesMapped(currentStartDate, currentEndDate) {
+function twoDatesMapped(currentStartDate, currentEndDate, dateMap = {}) {
   for (var currentIndex = currentStartDate; currentIndex < moment(currentEndDate).add(15, "m").toDate(); currentIndex = moment(currentIndex).add(15, "m").toDate()) {
     if (currentIndex in dateMap) {
       dateMap[currentIndex] = dateMap[currentIndex] + 1;
@@ -74,13 +77,14 @@ function twoDatesMapped(currentStartDate, currentEndDate) {
       dateMap[currentIndex] = 1;
     }
   }
+  return dateMap;
 }
 
 // Function that deals with output for question 3
 // Iterates over map first date and time where the value is greater then 1, date and time is start interval
 // Then locates the second date and time where the value is 1, end interval is date and time of the key before this one
 
-function printIntervals() {
+function printIntervals(dateMap) {
   console.log("(Question 3) Intervals of date and times (in UTC) where there are at least 2 workers free:");
 
   var startInterval = undefined;
@@ -106,3 +110,4 @@ function printIntervals() {
 exports.readFileLineByLine = readFileLineByLine;
 exports.getEarliestFree = getEarliestFree;
 exports.getLatestFree = getLatestFree;
+exports.twoDatesMapped = twoDatesMapped;
